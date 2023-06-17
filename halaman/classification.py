@@ -57,7 +57,6 @@ def app() :
                 data_pred = pd.concat([data_master[['Nama','NISN','JK']][:int((data_master.shape[0]-1)*test_size)],text_test, data_pred], axis=1)
                 data_pred.to_csv('data/hasil-akurasi-PSO-C45.csv',index=False)
             if(j == 0):
-                st.write((data_master.shape[0]-1)*test_size)
                 # text_train, text_test, y_train, y_test = train_test_split(X, y, test_size = test_size,train_size= train_size,stratify=y, random_state=1234)
                 text_test = X[0:int((data_master.shape[0]-1)*test_size)]
                 text_train = X[int(((data_master.shape[0]-1)*test_size)+1):int((data_master.shape[0]-1))]
