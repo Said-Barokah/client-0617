@@ -23,7 +23,7 @@ def app() :
     # st.write(feature_column['fitur'].values)
     
     with st.spinner('Wait for it...'):
-                text_test = X[0:int((data_master.shape[0]-1)*test_size)]
+        text_test = X[0:int((data_master.shape[0]-1)*test_size)]
         text_train = X[int(((data_master.shape[0]-1)*test_size)+1):int((data_master.shape[0]-1))]
         y_test = y[0:int((data_master.shape[0]-1)*test_size)]
         y_train = y[int(((data_master.shape[0]-1)*test_size)+1):int(data_master.shape[0]-1)]
