@@ -67,6 +67,5 @@ def app() :
         st.write(pd.read_csv('data/hasil-akurasi-PSO-C45.csv'))
         st.caption(f'GAMBAR POHON KEPUTUSAN PSO C45')
         st.image(f"data/pictures/classification/train-PSO-C45.png")
-        continue
     # st.write(text_train)
     # st.write(text_test)
