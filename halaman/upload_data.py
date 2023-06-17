@@ -35,7 +35,7 @@ def app():
                 # dataframe = dataframe[[column_data['column'][0],column_data['label'][0]]]
                 if os.path.exists("data/main_data.csv"):
                     os.remove("data/main_data.csv")
-                    st.warning('data master diperbarui')
+                    st.warning('data diperbarui')
                 dataframe.to_csv('data/main_data.csv',index=False)
                 with st.spinner('tunggu sebentar ...'):
                     time.sleep(1)
