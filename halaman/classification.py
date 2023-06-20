@@ -6,7 +6,6 @@ import time
 def app() :
     
     from sklearn.model_selection import train_test_split
-    #penambahan upload_TF_IDF
     data_master = pd.read_csv('data/data master.csv',lineterminator='\r')
     df_data_num = pd.read_csv('data/meta/df_data_numeric.csv')
     df_data_num = df_data_num.to_numpy() 
