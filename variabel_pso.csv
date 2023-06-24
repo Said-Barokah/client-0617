@@ -1,0 +1,9 @@
+parameter,nilai bobot
+test size,0.2
+population size,10
+bobot kognitif,2.0
+bobot sosial,2.0
+bobot inertia,0.7
+minimal kecepatan,0
+maximal kecepatan,1
+jumlah generasi,100
