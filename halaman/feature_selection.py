@@ -1,10 +1,11 @@
 
 import streamlit as st
+import time
 
 #sesuaikan dengan nama file
 import pandas as pd
 import os
-
+from sklearn.model_selection import train_test_split, cross_val_score
 if os.path.exists("data/main_data.csv") and os.path.exists("data/meta/label_data.csv"):
     data = pd.read_csv('data/main_data.csv')
     mapping = {'ya': 1, 'tidak': 0}
@@ -12,7 +13,7 @@ if os.path.exists("data/main_data.csv") and os.path.exists("data/meta/label_data
 # Mengubah data pada semua kolom kecuali kolom kelas
     data.iloc[:, :-1] = data.iloc[:, :-1].applymap(lambda x: mapping.get(x, x))
 
-    from sklearn.model_selection import train_test_split, cross_val_score
+    
     label_data = pd.read_csv('data/meta/label_data.csv')
     # st.dataframe(data[label_data['label'][0]])
     feature_names = data.drop(label_data['label'][0], axis=1).columns
@@ -20,13 +21,14 @@ if os.path.exists("data/main_data.csv") and os.path.exists("data/meta/label_data
     feature_column = pd.DataFrame(feature_names,columns=['fitur'])
     feature_column.to_csv('data/meta/feature_names.csv',index=False)
     
-    feature_names = feature_names.to_numpy()
+    feature_names = feature_names.to_numpy() 
     data_np = data.to_numpy() 
     df_data_num = pd.DataFrame(data_np)
     df_data_num.to_csv('data/meta/df_data_numeric.csv',index=False)
+    test_size = pd.read_csv('data/meta/test_size.csv')
     X =data_np[:, :-1]
     y =data_np[:, -1]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1234)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=float(test_size['test size'][0]), random_state=1221)
 # !pip install niapy
 from niapy.problems import Problem
 # data penyimpanan dari beberapa atribut yang akan digunakan natinya
@@ -62,24 +64,30 @@ class SVMFeatureSelection(Problem):
 
         return fitness_value
 def app() :
-
     st.subheader('Seleksi fitur PSO')
     from sklearn.datasets import load_breast_cancer
     from niapy.task import Task
     from niapy.algorithms.basic import ParticleSwarmOptimization
 
     population_size = st.number_input('population size', value=10)
-    c1 = st.number_input('c1',value=2.0)
-    c2 = st.number_input('c2',value=2.0)
-    w = st.number_input('w',value=0.7)
+    c1 = st.number_input('c1 (bobot kognitif)',value=2.0)
+    c2 = st.number_input('c2 (bobot sosial)',value=2.0)
+    w = st.number_input('w (bobot inertia)',value=0.7)
     min_velocity = st.number_input('minimal kecepatan',value=0)
     max_velocity = st.number_input('maksimal kecepatan',value=1)
-    iterasi = st.number_input('iterasi yang dilakukan',value=100)
-    
+    iterasi = st.number_input('jumlah generasi',value=100)
+
+    df_variabel_pso = pd.DataFrame(data={
+        'parameter' : ['test size','population size','bobot kognitif','bobot sosial','bobot inertia', 'minimal kecepatan','maximal kecepatan','jumlah generasi'],
+        'nilai bobot' : [str(float(test_size['test size'][0])),population_size,c1,c2,w,min_velocity,max_velocity,iterasi] 
+                                       })
+    df_variabel_pso.to_csv('data/meta/variabel_pso.csv',index=False)
     problem = SVMFeatureSelection(X_train, y_train)
     task = Task(problem, max_iters=iterasi)
     algorithm = ParticleSwarmOptimization(population_size=population_size, seed=1234,  c1=c1, c2=c2, w=w, min_velocity=min_velocity, max_velocity=max_velocity)
-    best_features, best_fitness = algorithm.run(task)
+    with st.spinner('tunggu sebentar ...'):
+        time.sleep(1)
+        best_features, best_fitness = algorithm.run(task)
 
     selected_features = best_features > 0.5
     df_selected_features = pd.DataFrame(feature_names[selected_features].tolist(), columns=['selected'])
