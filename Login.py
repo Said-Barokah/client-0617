@@ -40,13 +40,6 @@ else:
 
     demo_name = st.sidebar.selectbox("halaman", page_names_to_funcs.keys())
     import os
-    if(demo_name == 'Seleksi Fitur'):
-        st.sidebar.write('Data Test')
-        from sklearn.model_selection import train_test_split
-        data = pd.read_csv('data/data master.csv')
-        test_size = pd.read_csv('data/meta/test_size.csv')
-        X_train, X_test, y_train, y_test = train_test_split(data[["Nama"]], data[["kelas"]], test_size=test_size, random_state=1221)
-        st.sidebar.write(X_test.join(y_test))
     if(demo_name == 'Klasifikasi'):
         st.sidebar.text('Parameter PSO')
         df_pso=pd.read_csv('data/meta/variabel_pso.csv').round(2)
